@@ -1,0 +1,113 @@
+---
+title: "Store 24(A)"
+author: "Parv Patni"
+date: "December 18, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+getwd()
+store <- read.csv(paste("Store24.csv", sep=""))
+head(store)
+summary(store)
+```
+mean and standards deviations of Profit
+```{r}
+mean(store$Profit)
+sd(store$Profit)
+```
+mean and standard deviation of MTenure.
+```{r}
+mean(store$MTenure)
+sd(store$MTenure)
+```
+mean and standard deviation of CTenure.
+```{r}
+mean(store$CTenure)
+sd(store$CTenure)
+```
+Top 10 most profitable stores.
+```{r}
+attach(store)
+exhib1 <- store[order(-Profit),]
+exhib1[1:10,1:5]
+```
+Top 10 least profitable stores
+```{r}
+exhib1 <- store[order(Profit),]
+exhib1[1:10,1:5]
+```
+Plot of Profit vs MTenure
+```{r}
+plot(MTenure,Profit)
+```
+Plot of Profit vs CTenure
+```{r}
+plot(CTenure,Profit)
+```
+
+```{r}
+library(corrplot)
+corrplot(corr=cor(store[ , c(1:14)], use="complete.obs"), 
+         method ="ellipse")
+```
+MTenure
+```{r}
+cor(store$Profit,store$MTenure)
+```
+Correlation between Profit and CTenure
+```{r}
+cor(store$Profit,store$CTenure)
+```
+Corrgram of all the variables
+```{r}
+library(corrgram)
+corrgram(store, order=TRUE,
+         main="Corrgram of all the Variables",
+         lower.panel=panel.shade, upper.panel=panel.pie,
+         diag.panel=panel.minmax, text.panel=panel.txt) 
+```
+The p - Value is 8.193e-05.
+
+Correlation test between Profit and CTenure
+```{r}
+cor.test(store$Profit,store$CTenure)
+```
+The p - Value is 0.02562.
+
+Regression of Profit on {MTenure, CTenure, Comp, Pop, PedCount, Res, Hours24, Visibility}
+```{r}
+regr <- lm(Profit ~ MTenure + CTenure + Comp + Pop + PedCount + Res + Hours24 + Visibility, data = store)
+summary(regr)
+```
+```{r}
+regr$coefficients
+residuals(regr)
+```
+
+
+##Summary
+
+1.Profit has the strongest correlation with crew tenure and with manager tenure.
+
+2.Crew skill is directly dependent on the crew tenure, meaning crew retention will lead to increase in skills, which inturn leads to higher profits.
+
+3.The most profitable store is with ID:74 and the least profitable store is :57
+
+4.Profit also has a significantly strong relationship with population served by the store, pedestrian traffic rate and crew skill.It also has a negative correlation with competition and resedential area. 
+
+5.stores located in industrial areas generally have a high employee retention and skill rate. Hence, any employee retention programme must primarily be focused in stores located in resedential areas.
+
+6.Coming to the regression part,the p-value of the model is statistically significant.It means it is a good fit model.
+
+7.R square value is:0.6379.It means that 63.79% of variations in the dependent variable is explained by the independent variable.
+
+8.Adjusted R square value is 0.594.It means 59.4% variation in the dependent variable is explained by the independent variable.This values decreases as we add no of independent variables.
+
+9.Variables MTenure, Comp, PedCount, Hours24, CTenure, Pop, Res are Statistically significant with p<0.05.
+
+10.Variable Visibility is statistically insignificant with p>0.05.
